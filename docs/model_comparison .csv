@@ -1,0 +1,6 @@
+model,best_params,cv_f1_mean,cv_f1_std,train_recall,train_f1,test_recall,test_precision,test_f1,test_accuracy,test_roc_auc,test_pr_auc,fit_seconds,predict_ms_per_sample,size_kb
+Logistic Regression (baseline),{'C': 0.1},0.9671,0.0112,0.9765,0.9794,0.9762,1.0,0.988,0.9912,0.9977,0.9966,2.4,0.029,2.4
+KNN,"{'n_neighbors': 3, 'weights': 'uniform'}",0.9633,0.025,0.9588,0.979,0.8571,0.973,0.9114,0.9386,0.9825,0.9712,0.8,0.036,102.3
+SVM (RBF),"{'C': 10, 'gamma': 0.01}",0.973,0.0116,0.9706,0.9851,0.9762,1.0,0.988,0.9912,0.997,0.9958,1.9,0.028,16.6
+Decision Tree,"{'criterion': 'gini', 'max_depth': 5, 'min_samples_leaf': 5}",0.9378,0.0297,0.9706,0.951,0.8333,0.8974,0.8642,0.9035,0.9076,0.912,3.2,0.032,3.2
+Random Forest,"{'max_depth': None, 'min_samples_leaf': 1, 'n_estimators': 100}",0.9525,0.0175,1.0,1.0,0.9286,1.0,0.963,0.9737,0.9965,0.9943,44.9,0.33,89.4
