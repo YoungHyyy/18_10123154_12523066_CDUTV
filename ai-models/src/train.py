@@ -6,8 +6,8 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
-from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (accuracy_score, average_precision_score, f1_score,
                              precision_score, recall_score, roc_auc_score)
@@ -20,11 +20,10 @@ from preprocess import MODELS_DIR, RANDOM_STATE, make_preprocessor
 
 
 def get_candidates():
-    """Tên -> (model, lưới siêu tham số). Khóa lưới bắt đầu bằng clf__."""
+    """Tên -> (model, lưới siêu tham số). Khóa lưới bắt đầu bằng clf__.
+    Chỉ dùng các model có trong chương trình môn học."""
     return {
-        "Baseline (Dummy)": (
-            DummyClassifier(strategy="most_frequent"), {}),
-        "Logistic Regression": (
+        "Logistic Regression (baseline)": (
             LogisticRegression(max_iter=5000, class_weight="balanced",
                                random_state=RANDOM_STATE),
             {"clf__C": [0.01, 0.1, 1, 10, 100]}),
@@ -36,6 +35,11 @@ def get_candidates():
             SVC(kernel="rbf", probability=True, class_weight="balanced",
                 random_state=RANDOM_STATE),
             {"clf__C": [0.1, 1, 10, 100], "clf__gamma": ["scale", 0.01, 0.1]}),
+        "Decision Tree": (
+            DecisionTreeClassifier(class_weight="balanced", random_state=RANDOM_STATE),
+            {"clf__criterion": ["gini", "entropy"],
+             "clf__max_depth": [3, 5, 7, 10, None],
+             "clf__min_samples_leaf": [1, 2, 5]}),
         "Random Forest": (
             RandomForestClassifier(class_weight="balanced",
                                    random_state=RANDOM_STATE, n_jobs=-1),
