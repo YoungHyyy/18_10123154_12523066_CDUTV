@@ -1,0 +1,6 @@
+Model,best_params,Accuracy_train,Accuracy,Precision,Recall,F1-score,ROC-AUC,train_time_s,predict_time_s_per_sample,overfit_gap
+Logistic Regression,{'clf__C': 10},0.989,0.9737,0.9756,0.9524,0.9639,0.9864,0.126,1e-05,0.0153
+SVM,"{'clf__C': 10, 'clf__gamma': 'scale'}",0.989,0.9737,1.0,0.9286,0.963,0.9927,0.397,1e-05,0.0153
+Random Forest,"{'clf__max_depth': None, 'clf__n_estimators': 100}",1.0,0.9737,1.0,0.9286,0.963,0.9929,5.114,5e-05,0.0263
+KNN,{'clf__n_neighbors': 7},0.9714,0.9561,0.9744,0.9048,0.9383,0.9825,0.151,1e-05,0.0153
+Decision Tree,"{'clf__max_depth': 7, 'clf__min_samples_leaf': 1}",0.9956,0.9386,0.9487,0.881,0.9136,0.9225,0.405,1e-05,0.057

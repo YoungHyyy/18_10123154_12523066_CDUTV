@@ -1,190 +1,35 @@
 {
   "features": [
-    {
-      "name": "radius_mean",
-      "type": "float",
-      "min": 6.981,
-      "max": 28.11
-    },
-    {
-      "name": "texture_mean",
-      "type": "float",
-      "min": 9.71,
-      "max": 39.28
-    },
-    {
-      "name": "perimeter_mean",
-      "type": "float",
-      "min": 43.79,
-      "max": 188.5
-    },
-    {
-      "name": "area_mean",
-      "type": "float",
-      "min": 143.5,
-      "max": 2501.0
-    },
-    {
-      "name": "smoothness_mean",
-      "type": "float",
-      "min": 0.05263,
-      "max": 0.1634
-    },
-    {
-      "name": "compactness_mean",
-      "type": "float",
-      "min": 0.01938,
-      "max": 0.3454
-    },
-    {
-      "name": "concavity_mean",
-      "type": "float",
-      "min": 0.0,
-      "max": 0.4268
-    },
-    {
-      "name": "concave points_mean",
-      "type": "float",
-      "min": 0.0,
-      "max": 0.2012
-    },
-    {
-      "name": "symmetry_mean",
-      "type": "float",
-      "min": 0.106,
-      "max": 0.304
-    },
-    {
-      "name": "fractal_dimension_mean",
-      "type": "float",
-      "min": 0.04996,
-      "max": 0.09744
-    },
-    {
-      "name": "radius_se",
-      "type": "float",
-      "min": 0.1115,
-      "max": 2.873
-    },
-    {
-      "name": "texture_se",
-      "type": "float",
-      "min": 0.3602,
-      "max": 4.885
-    },
-    {
-      "name": "perimeter_se",
-      "type": "float",
-      "min": 0.757,
-      "max": 21.98
-    },
-    {
-      "name": "area_se",
-      "type": "float",
-      "min": 6.802,
-      "max": 542.2
-    },
-    {
-      "name": "smoothness_se",
-      "type": "float",
-      "min": 0.001713,
-      "max": 0.03113
-    },
-    {
-      "name": "compactness_se",
-      "type": "float",
-      "min": 0.002252,
-      "max": 0.1354
-    },
-    {
-      "name": "concavity_se",
-      "type": "float",
-      "min": 0.0,
-      "max": 0.396
-    },
-    {
-      "name": "concave points_se",
-      "type": "float",
-      "min": 0.0,
-      "max": 0.05279
-    },
-    {
-      "name": "symmetry_se",
-      "type": "float",
-      "min": 0.007882,
-      "max": 0.07895
-    },
-    {
-      "name": "fractal_dimension_se",
-      "type": "float",
-      "min": 0.0008948,
-      "max": 0.02984
-    },
-    {
-      "name": "radius_worst",
-      "type": "float",
-      "min": 7.93,
-      "max": 36.04
-    },
-    {
-      "name": "texture_worst",
-      "type": "float",
-      "min": 12.02,
-      "max": 49.54
-    },
-    {
-      "name": "perimeter_worst",
-      "type": "float",
-      "min": 50.41,
-      "max": 251.2
-    },
-    {
-      "name": "area_worst",
-      "type": "float",
-      "min": 185.2,
-      "max": 4254.0
-    },
-    {
-      "name": "smoothness_worst",
-      "type": "float",
-      "min": 0.07117,
-      "max": 0.2226
-    },
-    {
-      "name": "compactness_worst",
-      "type": "float",
-      "min": 0.02729,
-      "max": 1.058
-    },
-    {
-      "name": "concavity_worst",
-      "type": "float",
-      "min": 0.0,
-      "max": 1.252
-    },
-    {
-      "name": "concave points_worst",
-      "type": "float",
-      "min": 0.0,
-      "max": 0.291
-    },
-    {
-      "name": "symmetry_worst",
-      "type": "float",
-      "min": 0.1565,
-      "max": 0.6638
-    },
-    {
-      "name": "fractal_dimension_worst",
-      "type": "float",
-      "min": 0.05504,
-      "max": 0.2075
-    }
+    "radius_mean",
+    "texture_mean",
+    "perimeter_mean",
+    "area_mean",
+    "smoothness_mean",
+    "compactness_mean",
+    "concavity_mean",
+    "concave points_mean",
+    "symmetry_mean",
+    "fractal_dimension_mean",
+    "radius_se",
+    "texture_se",
+    "perimeter_se",
+    "area_se",
+    "smoothness_se",
+    "compactness_se",
+    "concavity_se",
+    "concave points_se",
+    "symmetry_se",
+    "fractal_dimension_se",
+    "radius_worst",
+    "texture_worst",
+    "perimeter_worst",
+    "area_worst",
+    "smoothness_worst",
+    "compactness_worst",
+    "concavity_worst",
+    "concave points_worst",
+    "symmetry_worst",
+    "fractal_dimension_worst"
   ],
-  "target": "diagnosis",
-  "labels": {
-    "0": "benign",
-    "1": "malignant"
-  },
-  "positive_class": "malignant"
+  "target": "diagnosis (B=lành tính, M=ác tính)"
 }

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<title>Chẩn đoán ung thư vú</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; }
+  h1 { font-size: 1.4rem; }
+  #fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin: 16px 0; }
+  label { font-size: 0.8rem; color: #333; display: block; }
+  input { width: 100%; box-sizing: border-box; padding: 4px 6px; }
+  button { padding: 8px 16px; margin-right: 8px; cursor: pointer; }
+  #result { margin-top: 16px; padding: 12px; border-radius: 6px; white-space: pre-wrap; }
+  .benign { background: #e8f8ef; border: 1px solid #4C9F70; }
+  .malignant { background: #fdecea; border: 1px solid #C0392B; }
+</style>
+</head>
+<body>
+  <h1>Chẩn đoán ung thư vú — demo</h1>
+  <p>Nhập 30 chỉ số đo từ ảnh sinh thiết (fine needle aspirate), hoặc bấm "Điền mẫu" để test nhanh.</p>
+  <div>
+    <button id="fill-benign">Điền mẫu (lành tính)</button>
+    <button id="fill-malignant">Điền mẫu (ác tính)</button>
+  </div>
+  <form id="predict-form">
+    <div id="fields">Đang tải schema...</div>
+    <button type="submit">Dự đoán</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    const BACKEND_URL = window.location.origin.replace(/:\d+$/, "") + ":8080"; // TODO: chỉnh lại nếu BE public ở domain/port khác
+
+    // Mẫu tham khảo lấy từ thống kê mô tả của dataset (không phải mẫu thật trong tập test)
+    const SAMPLE_BENIGN = {"radius_mean": 12.0, "texture_mean": 18.0, "perimeter_mean": 78.0, "area_mean": 460.0, "smoothness_mean": 0.09, "compactness_mean": 0.08, "concavity_mean": 0.05, "concave points_mean": 0.03, "symmetry_mean": 0.17, "fractal_dimension_mean": 0.06, "radius_se": 0.3, "texture_se": 1.0, "perimeter_se": 2.0, "area_se": 20.0, "smoothness_se": 0.006, "compactness_se": 0.02, "concavity_se": 0.02, "concave points_se": 0.01, "symmetry_se": 0.02, "fractal_dimension_se": 0.003, "radius_worst": 13.5, "texture_worst": 24.0, "perimeter_worst": 88.0, "area_worst": 560.0, "smoothness_worst": 0.12, "compactness_worst": 0.18, "concavity_worst": 0.15, "concave points_worst": 0.07, "symmetry_worst": 0.27, "fractal_dimension_worst": 0.08};
+    const SAMPLE_MALIGNANT = {"radius_mean": 20.0, "texture_mean": 24.0, "perimeter_mean": 132.0, "area_mean": 1290.0, "smoothness_mean": 0.1, "compactness_mean": 0.2, "concavity_mean": 0.25, "concave points_mean": 0.14, "symmetry_mean": 0.2, "fractal_dimension_mean": 0.06, "radius_se": 0.8, "texture_se": 1.2, "perimeter_se": 5.5, "area_se": 100.0, "smoothness_se": 0.007, "compactness_se": 0.04, "concavity_se": 0.05, "concave points_se": 0.02, "symmetry_se": 0.02, "fractal_dimension_se": 0.004, "radius_worst": 25.0, "texture_worst": 32.0, "perimeter_worst": 170.0, "area_worst": 1950.0, "smoothness_worst": 0.14, "compactness_worst": 0.45, "concavity_worst": 0.55, "concave points_worst": 0.22, "symmetry_worst": 0.36, "fractal_dimension_worst": 0.1};
+
+    let featureNames = [];
+
+    async function loadSchema() {
+      const res = await fetch(`${BACKEND_URL}/api/schema`);
+      const schema = await res.json();
+      featureNames = schema.features;
+      const container = document.getElementById("fields");
+      container.innerHTML = "";
+      featureNames.forEach((name) => {
+        const wrap = document.createElement("div");
+        wrap.innerHTML = `<label>${name}</label><input type="number" step="any" name="${name}" required />`;
+        container.appendChild(wrap);
+      });
+    }
+
+    function fillSample(sample) {
+      featureNames.forEach((name) => {
+        const input = document.querySelector(`input[name="${CSS.escape(name)}"]`);
+        if (input) input.value = sample[name];
+      });
+    }
+
+    document.getElementById("fill-benign").addEventListener("click", () => fillSample(SAMPLE_BENIGN));
+    document.getElementById("fill-malignant").addEventListener("click", () => fillSample(SAMPLE_MALIGNANT));
+
+    document.getElementById("predict-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const features = {};
+      featureNames.forEach((name) => {
+        const input = document.querySelector(`input[name="${CSS.escape(name)}"]`);
+        features[name] = parseFloat(input.value);
+      });
+
+      const resultBox = document.getElementById("result");
+      resultBox.className = "";
+      resultBox.textContent = "Đang dự đoán...";
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/predict`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ features }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(JSON.stringify(data));
+        resultBox.className = data.diagnosis === "M" ? "malignant" : "benign";
+        resultBox.textContent =
+          `Kết quả: ${data.diagnosis_label}\n` +
+          `Xác suất ác tính: ${(data.probability_malignant * 100).toFixed(2)}%\n` +
+          `Model: ${data.model_used}`;
+      } catch (err) {
+        resultBox.className = "malignant";
+        resultBox.textContent = "Lỗi: " + err.message;
+      }
+    });
+
+    loadSchema();
+  </script>
+</body>
+</html>

@@ -1,7 +1,21 @@
+# Secrets
 .env
 kaggle.json
+
+# Python
 __pycache__/
 *.pyc
-.ipynb_checkpoints/
-node_modules/
 .venv/
+venv/
+
+# Node
+node_modules/
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Data (nếu file lớn hơn 50MB, dùng Git LFS hoặc để ngoài repo)
+ai-models/data/*.csv
+ai-models/data/*.zip

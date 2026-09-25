@@ -1,0 +1,16 @@
+warning: in the working copy of '.env.example', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ai-models/colab/00_my_breast_cancer_ml.ipynb', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ai-models/data/data.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ai-models/models/schema.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docker-compose.yml', LF will be replaced by CRLF the next time Git touches it
+ .env.example                                 |   11 [32m+[m
+ .gitignore                                   |   18 [32m+[m[31m-[m
+ ai-models/colab/00_my_breast_cancer_ml.ipynb | 2199 [32m++++++++++[m[31m----------------[m
+ ai-models/data/data.md                       |   16 [32m+[m[31m-[m
+ ai-models/models/schema.json                 |  217 [32m+[m[31m--[m
+ docker-compose.yml                           |   27 [32m+[m
+ docs/baocao.docx                             |  Bin [31m33748[m -> [32m599125[m bytes
+ docs/figures/model_metrics_comparison.png    |  Bin [31m211569[m -> [32m89610[m bytes
+ docs/figures/roc_curve_5_models.png          |  Bin [31m255634[m -> [32m118974[m bytes
+ 9 files changed, 950 insertions(+), 1538 deletions(-)

@@ -1,0 +1,18 @@
+{
+  "model_name": "Logistic Regression",
+  "best_params": {
+    "clf__C": 10
+  },
+  "metrics_test": {
+    "accuracy": 0.9737,
+    "precision": 0.9756,
+    "recall": 0.9524,
+    "f1": 0.9639,
+    "roc_auc": 0.9864
+  },
+  "overfit_gap_train_minus_test_accuracy": 0.0153,
+  "dataset": "Breast Cancer Wisconsin (Diagnostic) - Kaggle uciml/breast-cancer-wisconsin-data",
+  "n_features": 30,
+  "positive_class": "M (malignant)",
+  "trained_at": "2026-09-25T04:42:48.903559"
+}
