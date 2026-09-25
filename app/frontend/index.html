@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Hệ thống dự đoán ung thư vú" />
+    <title>Phòng thí nghiệm ung thư vú</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a
+          class="brand"
+          href="/"
+          aria-label="Trang chủ Phòng thí nghiệm ung thư vú"
+        >
+          <span class="brand-mark">BC</span>
+          <span>
+            <strong>Phòng thí nghiệm ung thư vú</strong>
+            <small>Không gian dự đoán chẩn đoán</small>
+          </span>
+        </a>
+        <div class="system-state" id="system-state" data-state="loading">
+          <span class="state-dot" aria-hidden="true"></span>
+          <span id="system-state-label">Đang kết nối</span>
+        </div>
+      </header>
+
+      <section class="intro">
+        <div>
+          <p class="eyebrow">BỘ DỮ LIỆU CHẨN ĐOÁN WISCONSIN</p>
+          <h1>Đo lường tín hiệu.<br /><em>Đọc vị mô hình.</em></h1>
+          <p class="intro-copy">
+            Không gian tập trung để sử dụng mô hình phân loại lành tính hoặc ác
+            tính.
+          </p>
+        </div>
+        <div class="model-chip" id="model-chip">
+          <span class="chip-label">MÔ HÌNH</span>
+          <strong id="model-name">Đang tải mô hình...</strong>
+          <span id="model-version">--</span>
+        </div>
+      </section>
+
+      <section class="workspace-grid">
+        <form class="panel prediction-panel" id="prediction-form">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">HỒ SƠ ĐẦU VÀO</p>
+              <h2>Chỉ số tế bào</h2>
+            </div>
+            <button class="button button-quiet" type="button" id="reset-button">
+              Đặt lại
+            </button>
+          </div>
+          <div class="field-groups" id="field-groups">
+            <div class="loading-block">Đang tải cấu trúc đặc trưng...</div>
+          </div>
+          <div class="form-footer">
+            <span class="form-note" id="form-note"
+              >Giá trị sẽ được kiểm tra theo schema của mô hình.</span
+            >
+            <button
+              class="button button-primary"
+              type="submit"
+              id="predict-button"
+              disabled
+            >
+              <span>Dự đoán</span><span aria-hidden="true">&#8594;</span>
+            </button>
+          </div>
+        </form>
+
+        <aside class="side-column">
+          <section class="panel result-panel" aria-live="polite">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">KẾT QUẢ MỚI NHẤT</p>
+                <h2 id="result-title">Đang chờ dữ liệu</h2>
+              </div>
+              <span class="result-icon" id="result-icon">+</span>
+            </div>
+            <div class="result-value" id="result-value">--</div>
+            <p class="result-copy" id="result-copy">
+              Gửi đầy đủ các chỉ số để nhận kết quả từ mô hình.
+            </p>
+            <div class="probability-track">
+              <span id="probability-bar"></span>
+            </div>
+            <div class="result-meta">
+              <span>Xác suất</span><strong id="probability-value">--</strong>
+            </div>
+            <div class="request-meta" id="request-meta">Chưa có yêu cầu</div>
+          </section>
+
+          <section class="panel metrics-panel">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">THÔNG TIN MÔ HÌNH</p>
+                <h2>Metric lựa chọn</h2>
+              </div>
+            </div>
+            <div class="metrics-list" id="metrics-list">
+              <div class="loading-block">Đang tải metric...</div>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <section class="panel history-panel">
+        <div class="panel-heading compact">
+          <div>
+            <p class="eyebrow">NHẬT KÝ DỰ ĐOÁN</p>
+            <h2>Dự đoán gần đây</h2>
+          </div>
+          <button
+            class="button button-quiet"
+            type="button"
+            id="refresh-history"
+          >
+            Làm mới
+          </button>
+        </div>
+        <div class="history-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Thời gian</th>
+                <th>Kết quả</th>
+                <th>Xác suất</th>
+                <th>Mô hình</th>
+              </tr>
+            </thead>
+            <tbody id="history-body">
+              <tr>
+                <td colspan="4" class="empty-state">Chưa có dự đoán nào.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>Phòng thí nghiệm ung thư vú</span
+        ><span>Chỉ dùng cho mục đích học tập</span>
+      </footer>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

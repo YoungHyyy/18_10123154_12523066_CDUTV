@@ -1,6 +1,8 @@
 """AI Service - nạp model.joblib khi khởi động, phục vụ /predict."""
 import json
 import logging
+import math
+import os
 import time
 import uuid
 from pathlib import Path
@@ -10,18 +12,20 @@ import pandas as pd
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, ValidationError
+from fastapi.exceptions import RequestValidationError
+from pydantic import BaseModel, ConfigDict, Field
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s ai-service %(message)s")
 log = logging.getLogger("ai-service")
 
-MODELS_DIR = Path(__file__).resolve().parents[1] / "models"
+MODELS_DIR = Path(os.getenv("MODELS_DIR", Path(__file__).resolve().parents[1] / "models"))
+SERVICE_PORT = int(os.getenv("PORT", "8001"))
 START_TIME = time.time()
 
 app = FastAPI(title="Breast Cancer AI Service")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # xem ghi chú CORS ở dưới
+    allow_origins=[origin.strip() for origin in os.getenv("CORS_ORIGINS", "*").split(",")],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -38,7 +42,20 @@ log.info(f"Đã nạp model {METADATA['model_name']} (v{METADATA['model_version'
 
 
 class PredictRequest(BaseModel):
-    features: dict[str, float]
+    model_config = ConfigDict(extra="forbid")
+
+    features: dict[str, float] = Field(min_length=1)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=400,
+        content={
+            "error": "invalid_input",
+            "detail": "Dữ liệu yêu cầu không hợp lệ",
+        },
+    )
 
 
 @app.middleware("http")
@@ -54,7 +71,12 @@ async def log_requests(request: Request, call_next):
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "uptime_seconds": round(time.time() - START_TIME, 1)}
+    return {
+        "status": "ok",
+        "service": "ai-service",
+        "port": SERVICE_PORT,
+        "uptime_seconds": round(time.time() - START_TIME, 1),
+    }
 
 
 @app.get("/model-info")
@@ -70,10 +92,28 @@ def model_info():
 @app.post("/predict")
 def predict(req: PredictRequest):
     missing = [c for c in FEATURE_NAMES if c not in req.features]
+    extra = [c for c in req.features if c not in FEATURE_NAMES]
     if missing:
         return JSONResponse(status_code=400, content={
             "error": "invalid_input",
             "detail": f"Thiếu cột: {', '.join(missing)}",
+        })
+    if extra:
+        return JSONResponse(status_code=400, content={
+            "error": "invalid_input",
+            "detail": f"Thừa cột: {', '.join(extra)}",
+        })
+
+    invalid = []
+    for feature in SCHEMA["features"]:
+        name = feature["name"]
+        value = req.features[name]
+        if not math.isfinite(value) or value < feature["min"] or value > feature["max"]:
+            invalid.append(name)
+    if invalid:
+        return JSONResponse(status_code=400, content={
+            "error": "invalid_input",
+            "detail": f"Giá trị ngoài khoảng hợp lệ hoặc không hữu hạn: {', '.join(invalid)}",
         })
 
     row = pd.DataFrame([{c: req.features[c] for c in FEATURE_NAMES}])

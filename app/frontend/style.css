@@ -1,0 +1,509 @@
+* {
+  box-sizing: border-box;
+}
+:root {
+  --ink: #182526;
+  --muted: #687879;
+  --paper: #f4f1e9;
+  --panel: #fffdf8;
+  --line: #d9ddd5;
+  --teal: #0f7773;
+  --teal-dark: #0b5554;
+  --coral: #d95f4f;
+  --yellow: #efc45c;
+  --shadow: 0 18px 50px rgba(27, 53, 50, 0.08);
+}
+html {
+  background: var(--paper);
+}
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 85% 0%, #dce9dd 0, transparent 28rem),
+    var(--paper);
+  font-family: Georgia, "Times New Roman", serif;
+}
+button,
+input {
+  font: inherit;
+}
+.shell {
+  width: min(1440px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 28px 0 32px;
+}
+.topbar,
+.brand,
+.system-state,
+.panel-heading,
+.form-footer,
+.result-meta,
+.footer {
+  display: flex;
+  align-items: center;
+}
+.topbar {
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 22px;
+}
+.brand {
+  gap: 12px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  color: #fff;
+  background: var(--teal);
+  font:
+    700 13px "Trebuchet MS",
+    sans-serif;
+  letter-spacing: 1px;
+}
+.brand strong,
+.brand small {
+  display: block;
+}
+.brand strong {
+  font-size: 17px;
+}
+.brand small {
+  margin-top: 3px;
+  color: var(--muted);
+  font:
+    11px "Trebuchet MS",
+    sans-serif;
+  letter-spacing: 0.4px;
+}
+.system-state {
+  gap: 8px;
+  color: var(--muted);
+  font:
+    12px "Trebuchet MS",
+    sans-serif;
+}
+.state-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--yellow);
+  box-shadow: 0 0 0 4px rgba(239, 196, 92, 0.2);
+}
+.system-state[data-state="ready"] .state-dot {
+  background: #3fa36e;
+  box-shadow: 0 0 0 4px rgba(63, 163, 110, 0.16);
+}
+.system-state[data-state="error"] .state-dot {
+  background: var(--coral);
+  box-shadow: 0 0 0 4px rgba(217, 95, 79, 0.16);
+}
+.intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  align-items: end;
+  padding: 68px 0 45px;
+}
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--teal);
+  font:
+    700 10px "Trebuchet MS",
+    sans-serif;
+  letter-spacing: 1.8px;
+}
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+h1 {
+  margin-bottom: 16px;
+  font-size: clamp(42px, 5.6vw, 78px);
+  line-height: 0.96;
+  font-weight: 400;
+  letter-spacing: -2px;
+}
+h1 em {
+  color: var(--teal);
+  font-style: italic;
+}
+.intro-copy {
+  max-width: 470px;
+  color: var(--muted);
+  font:
+    15px/1.6 "Trebuchet MS",
+    sans-serif;
+}
+.model-chip {
+  min-width: 250px;
+  padding: 18px 20px;
+  border-left: 3px solid var(--coral);
+  background: rgba(255, 253, 248, 0.72);
+  box-shadow: var(--shadow);
+}
+.chip-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--coral);
+  font:
+    700 10px "Trebuchet MS",
+    sans-serif;
+  letter-spacing: 1.5px;
+}
+.model-chip strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.model-chip span:last-child {
+  color: var(--muted);
+  font:
+    11px "Trebuchet MS",
+    sans-serif;
+}
+.workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(300px, 0.75fr);
+  gap: 22px;
+  align-items: start;
+}
+.panel {
+  background: rgba(255, 253, 248, 0.92);
+  border: 1px solid rgba(217, 221, 213, 0.9);
+  box-shadow: var(--shadow);
+}
+.prediction-panel {
+  padding: 30px;
+}
+.side-column {
+  display: grid;
+  gap: 22px;
+}
+.result-panel,
+.metrics-panel,
+.history-panel {
+  padding: 26px;
+}
+.panel-heading {
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 25px;
+}
+.panel-heading.compact {
+  margin-bottom: 20px;
+}
+h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+}
+.button {
+  border: 0;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    background 0.2s,
+    opacity 0.2s;
+}
+.button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+.button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+.button-primary {
+  display: inline-flex;
+  gap: 18px;
+  align-items: center;
+  padding: 14px 18px;
+  color: white;
+  background: var(--teal);
+  font:
+    700 12px "Trebuchet MS",
+    sans-serif;
+}
+.button-primary:hover:not(:disabled) {
+  background: var(--teal-dark);
+}
+.button-quiet {
+  padding: 8px 0;
+  color: var(--teal);
+  background: transparent;
+  font:
+    700 11px "Trebuchet MS",
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.feature-group {
+  margin: 0 0 26px;
+  padding: 0;
+  border: 0;
+}
+.feature-group legend {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 16px;
+}
+.feature-group legend span {
+  color: var(--muted);
+  font:
+    10px "Trebuchet MS",
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px 15px;
+  padding-top: 15px;
+}
+.field span,
+.field small {
+  display: block;
+}
+.field span {
+  margin-bottom: 6px;
+  color: #425354;
+  font:
+    11px "Trebuchet MS",
+    sans-serif;
+}
+.field input {
+  width: 100%;
+  padding: 10px 9px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: #f8f8f3;
+  outline: none;
+  font:
+    13px "Trebuchet MS",
+    sans-serif;
+}
+.field input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(15, 119, 115, 0.12);
+}
+.field small {
+  margin-top: 5px;
+  color: #9aa5a0;
+  font:
+    9px "Trebuchet MS",
+    sans-serif;
+}
+.form-footer {
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.form-note {
+  color: var(--muted);
+  font:
+    11px/1.4 "Trebuchet MS",
+    sans-serif;
+}
+.error-text {
+  color: var(--coral) !important;
+}
+.result-value {
+  margin: 25px 0 10px;
+  color: var(--muted);
+  font-size: 36px;
+  font-style: italic;
+}
+.result-value.benign {
+  color: var(--teal);
+}
+.result-value.malignant {
+  color: var(--coral);
+}
+.result-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--teal);
+  border: 1px solid #aad0c7;
+  font:
+    700 16px "Trebuchet MS",
+    sans-serif;
+}
+.result-icon.malignant {
+  color: var(--coral);
+  border-color: #e9b5ab;
+}
+.result-copy {
+  min-height: 54px;
+  color: var(--muted);
+  font:
+    12px/1.55 "Trebuchet MS",
+    sans-serif;
+}
+.probability-track {
+  height: 7px;
+  margin: 26px 0 10px;
+  background: #e7e9e1;
+  overflow: hidden;
+}
+.probability-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--teal);
+  transition: width 0.5s ease;
+}
+.result-meta {
+  justify-content: space-between;
+  color: var(--muted);
+  font:
+    11px "Trebuchet MS",
+    sans-serif;
+}
+.result-meta strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+.request-meta {
+  margin-top: 24px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+  color: #9aa5a0;
+  font:
+    10px "Trebuchet MS",
+    sans-serif;
+}
+.metrics-list {
+  display: grid;
+  gap: 13px;
+}
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 11px;
+  border-bottom: 1px solid #e7e9e1;
+  font:
+    12px "Trebuchet MS",
+    sans-serif;
+}
+.metric-row strong {
+  color: var(--teal);
+  font-weight: 700;
+}
+.history-panel {
+  margin-top: 22px;
+}
+.history-wrap {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font:
+    12px "Trebuchet MS",
+    sans-serif;
+}
+th {
+  padding: 10px 12px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+}
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #eceee8;
+}
+.table-badge {
+  display: inline-block;
+  padding: 5px 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.table-badge.benign {
+  color: var(--teal-dark);
+  background: #dceee6;
+}
+.table-badge.malignant {
+  color: #9d3e32;
+  background: #f8ddd7;
+}
+.empty-state,
+.loading-block {
+  padding: 20px;
+  color: var(--muted);
+  font:
+    12px "Trebuchet MS",
+    sans-serif;
+}
+.footer {
+  justify-content: space-between;
+  padding-top: 24px;
+  color: #9aa5a0;
+  font:
+    10px "Trebuchet MS",
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+@media (max-width: 980px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+  .side-column {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 700px) {
+  .shell {
+    width: min(100% - 28px, 600px);
+    padding-top: 18px;
+  }
+  .intro {
+    display: block;
+    padding: 48px 0 30px;
+  }
+  .model-chip {
+    margin-top: 28px;
+  }
+  h1 {
+    font-size: 48px;
+  }
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .prediction-panel,
+  .result-panel,
+  .metrics-panel,
+  .history-panel {
+    padding: 20px;
+  }
+  .side-column {
+    grid-template-columns: 1fr;
+  }
+  .form-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .button-primary {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
