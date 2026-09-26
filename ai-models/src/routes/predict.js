@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 const { History } = require("../db");
 
 const router = express.Router();
-const AI_SERVICE_URL = process.env.AI_SERVICE_URL || "http://localhost:8001";
+const AI_SERVICE_URL = process.env.AI_SERVICE_URL;
 
 router.post("/predict", async (req, res) => {
   const requestId = uuidv4().slice(0, 8);
@@ -13,13 +13,19 @@ router.post("/predict", async (req, res) => {
 
   if (!features || typeof features !== "object") {
     console.log(`req=${requestId} 400 thiếu features`);
-    return res
-      .status(400)
-      .json({
-        error: "invalid_input",
-        detail: "Thiếu trường features",
-        request_id: requestId,
-      });
+    return res.status(400).json({
+      error: "invalid_input",
+      detail: "Thiếu trường features",
+      request_id: requestId,
+    });
+  }
+
+  if (!AI_SERVICE_URL) {
+    return res.status(503).json({
+      error: "configuration_error",
+      detail: "AI_SERVICE_URL chưa được cấu hình",
+      request_id: requestId,
+    });
   }
 
   try {
@@ -55,13 +61,11 @@ router.post("/predict", async (req, res) => {
       `req=${requestId} 5xx không gọi được ai-service:`,
       err.message,
     );
-    res
-      .status(502)
-      .json({
-        error: "ai_service_unreachable",
-        detail: err.message,
-        request_id: requestId,
-      });
+    res.status(502).json({
+      error: "ai_service_unreachable",
+      detail: err.message,
+      request_id: requestId,
+    });
   }
 });
 
