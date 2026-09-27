@@ -167,7 +167,7 @@ Chạy theo thứ tự:
 4. [04_evaluate.ipynb](ai-models/colab/04_evaluate.ipynb)
 5. [05_package.ipynb](ai-models/colab/05_package.ipynb)
 
-Notebook tìm `ai-models/data/dataset.zip` từ repository hiện tại, không clone repository khác và ghi artifact về đúng thư mục của project.
+Notebook ưu tiên nhận diện repository hiện tại và dùng `ai-models/data/dataset.zip`; nếu chạy trên Colab chưa có repository, các notebook preprocessing/training/evaluation/package tự clone repository vào `/content`. Artifact được ghi về đúng thư mục của project.
 
 ## 12. Kiểm thử và hiệu năng
 
@@ -178,6 +178,8 @@ Các kiểm tra đã thực hiện:
 - Frontend JavaScript: `node --check` pass.
 - Docker Compose: 4 service healthy/running.
 - Smoke test qua Frontend: HTTP 200, schema 30 feature, prediction thành công và history lưu được vào MongoDB.
+- Restart & Run All đã hoàn tất cho cả 5 notebook bằng kernel sạch: 36/36 code cell chạy, không có cell lỗi.
+- Artifact được tạo/xác nhận: 6 hình EDA, 4 hình đánh giá, hai file ZIP hình, bảng 5 model, `model.joblib`, `schema.json` và `metadata.json`; model nạp lại và predict được với 30 feature.
 
 ### Load test API
 
@@ -200,19 +202,23 @@ K6 báo 0% HTTP request lỗi trên tổng 595 request (gồm 1 lần tải sche
 
 ## 13. Triển khai và demo online
 
-Hiện project đã xác minh trên local Docker. Chưa cấu hình địa chỉ public cố định hoặc tunnel.
+### Trạng thái hiện tại
 
-Khi deploy:
+Frontend của ứng dụng đang được public qua ngrok; tunnel hiện trỏ tới `http://localhost:3000`. Luồng người dùng đi qua Frontend -> Backend -> AI Service -> MongoDB trong Docker Compose. URL đã được kiểm tra hoạt động ngày 27/09/2026.
 
-1. Cập nhật `AI_SERVICE_URL_DOCKER` hoặc biến tương ứng theo nền tảng deploy.
-2. Cập nhật `CORS_ORIGIN` theo domain Frontend.
-3. Kiểm tra lại luồng Frontend -> Backend -> AI Service -> MongoDB.
-4. Cập nhật URL public vào README.
-5. Nếu dùng ngrok/tunnel, ghi thời điểm và URL mới trong nhật ký bên dưới mỗi lần đổi.
+Tunnel hiện chỉ public ứng dụng Frontend. Backend hiện gọi AI Service qua Docker network (`http://ai-service:8001`). Vì yêu cầu đề tài cần cả App và AI Service public được, phần public trực tiếp AI Service vẫn cần hoàn thiện hoặc xác nhận cách triển khai với giảng viên.
+
+Nếu tunnel đổi URL, cập nhật địa chỉ mới trong README và `.env` theo cấu hình triển khai, kiểm tra lại luồng dự đoán và ghi thêm một dòng vào nhật ký bên dưới. Nếu dùng tunnel không có địa chỉ ổn định, kiểm tra và cập nhật link vào sáng thứ Hai hàng tuần.
 
 ### Demo online
 
-https://resonant-askew-fiftieth.ngrok-free.dev/
+[https://resonant-askew-fiftieth.ngrok-free.dev/](https://resonant-askew-fiftieth.ngrok-free.dev/)
+
+### Nhật ký đổi cổng/tunnel
+
+| Thời điểm ghi nhận   | Địa chỉ cũ    | Địa chỉ mới                                     | Ghi chú |
+| -------------------- | ------------- | ----------------------------------------------- | ------- |
+| 2026-09-27 15:24 +07 | Chưa ghi nhận | https://resonant-askew-fiftieth.ngrok-free.dev/ |
 
 ## 14. Hạn chế và hướng phát triển
 
