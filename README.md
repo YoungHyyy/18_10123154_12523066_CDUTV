@@ -103,6 +103,8 @@ Các địa chỉ local:
 | AI Service API docs | http://localhost:8001/docs   |
 | MongoDB             | `localhost:27017`            |
 
+Các port publish ra máy host có thể đổi bằng `FRONTEND_HOST_PORT`, `BACKEND_HOST_PORT`, `AI_SERVICE_HOST_PORT` và `MONGODB_HOST_PORT` trong `.env`. Port bên trong Docker giữ nguyên để các service tiếp tục gọi nhau qua Docker network; nếu đổi host port, cập nhật URL local tương ứng. Khi truy cập Backend trực tiếp từ một origin khác, cập nhật thêm `CORS_ORIGIN` trong `.env`.
+
 Xem trạng thái và log:
 
 ```powershell
@@ -120,6 +122,10 @@ docker compose logs -f backend ai-service mongodb
 | `AI_SERVICE_URL_DOCKER` | AI Service trong Docker network             | `http://ai-service:8001`                  |
 | `PORT`                  | Port Backend                                | `8000`                                    |
 | `CORS_ORIGIN`           | Origin được phép gọi Backend                | `http://localhost:3000`                   |
+| `FRONTEND_HOST_PORT`    | Port Frontend publish trên máy host         | `3000`                                    |
+| `BACKEND_HOST_PORT`     | Port Backend publish trên máy host          | `8000`                                    |
+| `AI_SERVICE_HOST_PORT`  | Port AI Service publish trên máy host       | `8001`                                    |
+| `MONGODB_HOST_PORT`     | Port MongoDB publish trên máy host          | `27017`                                   |
 
 `.env` không được commit. Chỉ commit [.env.example](.env.example), không chứa credential thật.
 
