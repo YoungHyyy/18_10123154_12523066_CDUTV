@@ -82,7 +82,7 @@ flowchart LR
 		AI --> M[model.joblib + schema.json]
 ```
 
-Request được gắn `request_id` và log xuyên suốt Backend -> AI Service. Frontend dùng Nginx reverse proxy nên trình duyệt chỉ cần gọi cùng origin `/api`.
+Nginx tạo `request_id` nếu request chưa có, ghi access log có cấu trúc và chuyển tiếp cùng ID qua Backend tới AI Service. Dùng ID này để lần theo một request dự đoán trong log cả ba service.
 
 ## 8. Chạy local bằng Docker
 
@@ -98,6 +98,7 @@ Các địa chỉ local:
 | Thành phần          | URL                          |
 | ------------------- | ---------------------------- |
 | Frontend            | http://localhost:3000        |
+| Frontend health     | http://localhost:3000/health |
 | Backend health      | http://localhost:8000/health |
 | AI Service health   | http://localhost:8001/health |
 | AI Service API docs | http://localhost:8001/docs   |
@@ -109,8 +110,10 @@ Xem trạng thái và log:
 
 ```powershell
 docker compose ps
-docker compose logs -f backend ai-service mongodb
+docker compose logs -f frontend backend ai-service mongodb
 ```
+
+`GET /health` của Frontend trả JSON gồm `status`, `service`, `port` và `uptime_seconds`; trạng thái container cũng được Docker Compose kiểm tra qua healthcheck.
 
 ## 9. Biến môi trường
 
@@ -176,7 +179,24 @@ Các kiểm tra đã thực hiện:
 - Docker Compose: 4 service healthy/running.
 - Smoke test qua Frontend: HTTP 200, schema 30 feature, prediction thành công và history lưu được vào MongoDB.
 
-Đo tải đồng thời/p50/p95 chưa được thực hiện; đây là phần cần bổ sung trước khi công bố số liệu hiệu năng chính thức.
+### Load test API
+
+Script benchmark: [tools/load_test.js](tools/load_test.js). Script lấy schema từ Backend để tạo 30 giá trị tổng hợp nằm trong khoảng hợp lệ, sau đó gửi `POST /api/predict` qua Frontend; mỗi request kiểm tra HTTP 200 và response có prediction/request ID.
+
+Chạy trên PowerShell khi Docker Compose đang hoạt động:
+
+```powershell
+Get-Content .\tools\load_test.js -Raw | docker run --rm -i `
+	-e VUS=10 -e DURATION=1m grafana/k6:2.3.0 run -
+```
+
+Kết quả ngày 27/09/2026 trên Docker Compose local đã warm-up:
+
+| Virtual users | Thời lượng | Predict thành công | Throughput predict |      p50 |      p95 |       Max | Lỗi predict |
+| ------------: | ---------: | -----------------: | -----------------: | -------: | -------: | --------: | ----------: |
+|            10 |     1 phút |            594/594 |  9.74 request/giây | 13.69 ms | 27.88 ms | 120.92 ms |          0% |
+
+K6 báo 0% HTTP request lỗi trên tổng 595 request (gồm 1 lần tải schema); 1,188/1,188 checks đạt. Ngưỡng đặt cho lần đo là error rate dưới 1% và p95 dưới 2 giây, cả hai đều đạt. Tải dùng giá trị midpoint tổng hợp từ schema, không phải dữ liệu bệnh nhân. Kết quả này đo trên máy local với một lượt chạy, không phải giới hạn tải tối đa hay cam kết hiệu năng khi deploy/tunnel.
 
 ## 13. Triển khai và demo online
 
@@ -192,18 +212,12 @@ Khi deploy:
 
 ### Demo online
 
-Chưa triển khai. Sẽ cập nhật sau khi có URL public.
-
-### Nhật ký đổi cổng/tunnel
-
-| Thời điểm | Địa chỉ cũ | Địa chỉ mới | Ghi chú             |
-| --------- | ---------- | ----------- | ------------------- |
-| Chưa có   | -          | -           | Chưa sử dụng tunnel |
+https://resonant-askew-fiftieth.ngrok-free.dev/
 
 ## 14. Hạn chế và hướng phát triển
 
 - Dataset nhỏ và chỉ mô tả một nhóm dữ liệu FNA, nên không đại diện cho mọi quần thể bệnh nhân.
 - Model chưa được kiểm định lâm sàng.
-- Chưa có load test đồng thời và chưa triển khai public.
+- Đã load test local 10 VU trong 1 phút; chưa xác định ngưỡng chịu tải tối đa hoặc benchmark trên môi trường public.
 - MongoDB local hiện dùng cấu hình không mật khẩu cho môi trường học tập; production cần dùng secret/credential an toàn.
-- Hướng phát triển: thêm xác thực người dùng, giám sát model drift, load test, CI/CD, deploy public và bổ sung kiểm định trên dữ liệu ngoài tập huấn luyện.
+- Hướng phát triển: thêm xác thực người dùng, giám sát model drift, đo tải cao hơn để xác định ngưỡng chịu tải, CI/CD, deploy public và bổ sung kiểm định trên dữ liệu ngoài tập huấn luyện.
