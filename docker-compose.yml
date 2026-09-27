@@ -55,6 +55,16 @@ services:
       dockerfile: app/frontend/Dockerfile
     ports:
       - "${FRONTEND_HOST_PORT:-3000}:80"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'wget -q -O - http://127.0.0.1/health | grep -q ''"status":"ok","service":"frontend","port":80''',
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
     depends_on:
       backend:
         condition: service_healthy
