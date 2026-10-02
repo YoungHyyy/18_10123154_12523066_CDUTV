@@ -1,7 +1,7 @@
 {
   "model_name": "Logistic Regression (baseline)",
   "model_version": "1.0.0",
-  "trained_on": "2026-09-25",
+  "trained_on": "2026-09-27",
   "hyperparameters": {
     "C": 0.1
   },
