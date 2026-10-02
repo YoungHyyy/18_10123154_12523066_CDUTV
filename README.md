@@ -204,7 +204,7 @@ K6 báo 0% HTTP request lỗi trên tổng 595 request (gồm 1 lần tải sche
 
 ### Trạng thái hiện tại
 
-Frontend của ứng dụng đang được public qua ngrok; tunnel hiện trỏ tới `http://localhost:3000`. Luồng người dùng đi qua Frontend -> Backend -> AI Service -> MongoDB trong Docker Compose. URL đã được kiểm tra hoạt động ngày 27/09/2026.
+Frontend của ứng dụng đang được public qua ngrok; tunnel hiện trỏ tới `http://localhost:3000`. Luồng người dùng đi qua Frontend -> Backend -> AI Service -> MongoDB trong Docker Compose. URL và health endpoint đã được kiểm tra hoạt động ngày 29/09/2026. Với ngrok miễn phí, trình duyệt có thể hiện trang cảnh báo trước khi vào ứng dụng.
 
 Tunnel hiện chỉ public ứng dụng Frontend. Backend hiện gọi AI Service qua Docker network (`http://ai-service:8001`). Vì yêu cầu đề tài cần cả App và AI Service public được, phần public trực tiếp AI Service vẫn cần hoàn thiện hoặc xác nhận cách triển khai với giảng viên.
 
@@ -216,9 +216,9 @@ Nếu tunnel đổi URL, cập nhật địa chỉ mới trong README và `.env`
 
 ### Nhật ký đổi cổng/tunnel
 
-| Thời điểm ghi nhận   | Địa chỉ cũ    | Địa chỉ mới                                     | Ghi chú |
-| -------------------- | ------------- | ----------------------------------------------- | ------- |
-| 2026-09-27 15:24 +07 | Chưa ghi nhận | https://resonant-askew-fiftieth.ngrok-free.dev/ |
+| Thời điểm ghi nhận | Địa chỉ cũ    | Địa chỉ mới                                     | Ghi chú                                     |
+| ------------------ | ------------- | ----------------------------------------------- | ------------------------------------------- |
+| 2026-09-29         | Chưa ghi nhận | https://resonant-askew-fiftieth.ngrok-free.dev/ | Xác nhận frontend và `/health` trả HTTP 200 |
 
 ## 14. Hạn chế và hướng phát triển
 
